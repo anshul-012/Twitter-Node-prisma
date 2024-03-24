@@ -1,0 +1,33 @@
+import { NextFunction, Request, Response } from "express";
+import asyncHandler from "../util/asyncHandler";
+import db from "../db/prismaClient";
+import jwt, { JwtPayload } from "jsonwebtoken";
+import ApiError from "../util/ApiError";
+
+const auth = asyncHandler(
+	async (req: Request, res: Response, next: NextFunction) => {
+		const { accessToken } = req?.cookies;
+
+		if (!accessToken) {
+			return next(new ApiError(401, "unauthorized user !!!"));
+		}
+
+		const decodedToken: any = jwt.verify(
+			accessToken,
+			process.env.JWT_SECRET!
+		);
+
+		const user = await db.user.findUnique({
+			where: { id: decodedToken?.id },
+		});
+		if (!user) {
+			return next(new ApiError(401, "Invail access Token"));
+		}
+
+		req.user = user;
+
+		next();
+	}
+);
+
+export default auth;
