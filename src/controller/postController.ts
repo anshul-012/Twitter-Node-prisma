@@ -70,13 +70,55 @@ const deletePost = asyncHandler(
 				await deleteOnCloudinary(public_id);
 			}
 
-			res.json(
-				new ApiResponse({}, "Your Post is successfully Deleted.")
-			);
+			res.json(new ApiResponse({}, "Your Post is successfully Deleted."));
 		} catch (error) {
 			next(new ApiError(500, "SomeThing went wrong while deleting Post"));
 		}
 	}
 );
+const getPostById = asyncHandler(
+	async (req: Request, res: Response, next: NextFunction) => {
+		const { postId } = req.params;
 
-export { addPost, deletePost };
+		if (!postId) {
+			return next(new ApiError(400, "Post is required !"));
+		}
+
+		const postIdNum = Number(postId);
+
+		const post = await db.post.findFirst({
+			where: {
+				id: postIdNum,
+			},
+			include: {
+				owner: {
+					select: {
+						username: true,
+						avatar: true,
+					},
+				},
+			},
+		});
+
+		res.json(new ApiResponse(post, "single Post"));
+	}
+);
+
+const getAllPost = asyncHandler(
+	async (req: Request, res: Response, next: NextFunction) => {
+		const post = await db.post.findMany({
+			include: {
+				owner: {
+					select: {
+						username: true,
+						avatar: true,
+					},
+				},
+			},
+		});
+
+		res.json(new ApiResponse(post, "single Post"));
+	}
+);
+
+export { addPost, deletePost, getPostById, getAllPost };

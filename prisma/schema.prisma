@@ -14,6 +14,7 @@ model User {
   username  String      @unique
   email     String      @unique
   password  String?     @db.VarChar(255)
+  avatar    Json?
   tagList   String?     @db.VarChar(70)
   bio       String?     @db.VarChar(150)
   private   Boolean     @default(false)
@@ -25,7 +26,6 @@ model User {
   updatedAt DateTime    @updatedAt
   SavedPost SavedPost[]
 }
-
 
 model Post {
   id        Int         @id @default(autoincrement())
