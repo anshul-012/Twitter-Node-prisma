@@ -16,9 +16,9 @@ app.get("/health", async (_, res) => {
 
 
 import authRouter from "./routes/authRoutes.js"
-
+import postRouter from "./routes/postRoutes.js"
 
 app.use("/api/v1/auth", authRouter);
-
+app.use("/api/v1/posts",postRouter);
 export default app;
 app.use(errorMiddleware); 

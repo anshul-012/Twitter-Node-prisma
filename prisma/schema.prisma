@@ -26,10 +26,11 @@ model User {
   SavedPost SavedPost[]
 }
 
+
 model Post {
   id        Int         @id @default(autoincrement())
-  title     String      @db.VarChar(250)
-  content   String?
+  content   String      @db.VarChar(250)
+  image     Json?
   published Boolean     @default(false)
   likes     Like[]
   owner     User        @relation(fields: [ownerId], references: [id])
