@@ -18,7 +18,9 @@ app.get("/health", async (_, res) => {
 });
 const authRoutes_js_1 = __importDefault(require("./routes/authRoutes.js"));
 const postRoutes_js_1 = __importDefault(require("./routes/postRoutes.js"));
+const commentRoutes_js_1 = __importDefault(require("./routes/commentRoutes.js"));
 app.use("/api/v1/auth", authRoutes_js_1.default);
 app.use("/api/v1/posts", postRoutes_js_1.default);
+app.use("/api/v1/comments", commentRoutes_js_1.default);
 exports.default = app;
 app.use(errorMiddleware_1.default);

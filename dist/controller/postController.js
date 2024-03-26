@@ -52,9 +52,9 @@ const deletePost = (0, asyncHandler_1.default)(async (req, res, next) => {
                 id: postIdNum,
             },
         });
-        const public_id = post?.image?.public_id;
+        const public_id = post?.image;
         if (post.image !== null) {
-            await (0, cloudinary_1.deleteOnCloudinary)(public_id);
+            await (0, cloudinary_1.deleteOnCloudinary)(public_id.public_id);
         }
         res.json(new apiResponse_1.default({}, "Your Post is successfully Deleted."));
     }

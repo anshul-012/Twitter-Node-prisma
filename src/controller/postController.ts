@@ -64,10 +64,10 @@ const deletePost = asyncHandler(
 				},
 			});
 
-			const public_id = post?.image?.public_id as string;
+			const public_id = post?.image as any;
 
 			if (post.image !== null) {
-				await deleteOnCloudinary(public_id);
+				await deleteOnCloudinary(public_id.public_id);
 			}
 
 			res.json(new ApiResponse({}, "Your Post is successfully Deleted."));
