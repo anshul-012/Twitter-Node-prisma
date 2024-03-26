@@ -44,7 +44,26 @@ const likeToggle = asyncHandler(
 	}
 );
 
+const likedPostOfUser = asyncHandler(async(req:Request,res:Response,next:NextFunction)=>{
+    const userId = req?.user?.id;
 
+    const posts = await db.like.findMany({
+        where:{
+            userId
+        },
+        include:{
+            post:true,
+            user:{
+                select:{
+                    username:true,
+                    avatar:true,
+                }
+            }
+        }
+    })
+
+    res.status(200).json(new ApiResponse(posts, "All your Liked Post"))
+})
 export {
-    likeToggle
+    likeToggle, likedPostOfUser
 }
