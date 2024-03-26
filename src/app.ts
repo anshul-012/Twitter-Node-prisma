@@ -18,9 +18,12 @@ app.get("/health", async (_, res) => {
 import authRouter from "./routes/authRoutes.js";
 import postRouter from "./routes/postRoutes.js";
 import commentRouter from "./routes/commentRoutes.js";
+import likeRouter from "./routes/likeRouter.js";
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/posts",postRouter);
 app.use("/api/v1/comments",commentRouter);
+app.use("/api/v1/likes",likeRouter);
+
 export default app;
 app.use(errorMiddleware); 
