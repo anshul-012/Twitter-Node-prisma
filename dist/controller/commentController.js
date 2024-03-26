@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addComment = void 0;
+exports.getCommentByPost = exports.deleteComment = exports.addComment = void 0;
 const asyncHandler_1 = __importDefault(require("../util/asyncHandler"));
 const ApiError_1 = __importDefault(require("../util/ApiError"));
 const prismaClient_1 = __importDefault(require("../db/prismaClient"));
@@ -23,6 +23,39 @@ const addComment = (0, asyncHandler_1.default)(async (req, res, next) => {
             userId
         }
     });
-    res.json(new apiResponse_1.default(comment, "Your comment is posted... "));
+    res.status(200).json(new apiResponse_1.default(comment, "Your comment is posted... "));
 });
 exports.addComment = addComment;
+const deleteComment = (0, asyncHandler_1.default)(async (req, res, next) => {
+    const { commentId } = req.params;
+    try {
+        await prismaClient_1.default.comment.delete({
+            where: {
+                id: Number(commentId)
+            }
+        });
+        res.status(200).json(new apiResponse_1.default({}, "Your comment is successfull deleted..."));
+    }
+    catch (error) {
+        next(new ApiError_1.default(400, "Something went wrong while deleting comment"));
+    }
+});
+exports.deleteComment = deleteComment;
+const getCommentByPost = (0, asyncHandler_1.default)(async (req, res, next) => {
+    const { postId } = req.params;
+    const comments = await prismaClient_1.default.comment.findMany({
+        where: {
+            postId: Number(postId)
+        },
+        include: {
+            user: {
+                select: {
+                    username: true,
+                    avatar: true,
+                }
+            }
+        }
+    });
+    res.status(200).json(new apiResponse_1.default(comments, "All comments of this Post"));
+});
+exports.getCommentByPost = getCommentByPost;

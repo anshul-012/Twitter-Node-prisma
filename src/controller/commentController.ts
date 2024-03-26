@@ -29,11 +29,49 @@ const addComment = asyncHandler(
             }
         })
 
-        res.json(new ApiResponse(comment,"Your comment is posted... "))
+        res.status(200).json(new ApiResponse(comment,"Your comment is posted... "))
 	}
 );
+const deleteComment = asyncHandler(async(req:Request, res:Response,next:NextFunction)=>{
+    const {commentId} = req.params;
+
+   try {
+     await db.comment.delete({
+         where:{
+             id:Number(commentId)
+         }
+     })
+ 
+     res.status(200).json(new ApiResponse({},"Your comment is successfull deleted..."))
+     
+   } catch (error) {
+
+    next(new ApiError(400, "Something went wrong while deleting comment"))
+    
+   }
+})
+
+const getCommentByPost = asyncHandler(async(req:Request,res:Response,next:NextFunction)=>{
+    const {postId} = req.params;
+
+    const comments = await db.comment.findMany({
+        where:{
+            postId:Number(postId)
+        },
+        include:{
+            user:{
+                select:{
+                    username:true,
+                    avatar:true,
+
+                }
+            }
+        }
+    })
+
+    res.status(200).json(new ApiResponse(comments,"All comments of this Post"))
+})
 
 
 
-
-export { addComment }
+export { addComment, deleteComment, getCommentByPost }
