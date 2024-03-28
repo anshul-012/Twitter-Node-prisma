@@ -20,8 +20,8 @@ const addComment = (0, asyncHandler_1.default)(async (req, res, next) => {
         data: {
             content,
             postId,
-            userId
-        }
+            userId,
+        },
     });
     res.status(200).json(new apiResponse_1.default(comment, "Your comment is posted... "));
 });
@@ -31,8 +31,8 @@ const deleteComment = (0, asyncHandler_1.default)(async (req, res, next) => {
     try {
         await prismaClient_1.default.comment.delete({
             where: {
-                id: Number(commentId)
-            }
+                id: Number(commentId),
+            },
         });
         res.status(200).json(new apiResponse_1.default({}, "Your comment is successfull deleted..."));
     }
@@ -43,18 +43,24 @@ const deleteComment = (0, asyncHandler_1.default)(async (req, res, next) => {
 exports.deleteComment = deleteComment;
 const getCommentByPost = (0, asyncHandler_1.default)(async (req, res, next) => {
     const { postId } = req.params;
+    let { page, limit } = req.query;
+    page = Number(page ? page : 0);
+    limit = Number(limit ? limit : 10);
+    const skip = page * limit;
     const comments = await prismaClient_1.default.comment.findMany({
+        skip: skip,
+        take: limit,
         where: {
-            postId: Number(postId)
+            postId: Number(postId),
         },
         include: {
             user: {
                 select: {
                     username: true,
                     avatar: true,
-                }
-            }
-        }
+                },
+            },
+        },
     });
     res.status(200).json(new apiResponse_1.default(comments, "All comments of this Post"));
 });

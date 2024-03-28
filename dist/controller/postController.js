@@ -91,16 +91,28 @@ const getPostById = (0, asyncHandler_1.default)(async (req, res, next) => {
 });
 exports.getPostById = getPostById;
 const getAllPost = (0, asyncHandler_1.default)(async (req, res, next) => {
-    const post = await prismaClient_1.default.post.findMany({
-        include: {
-            owner: {
-                select: {
-                    username: true,
-                    avatar: true,
-                },
-            },
+    // const post = await db.post.findMany({
+    // 	include: {
+    // 		owner: {
+    // 			select: {
+    // 				username: true,
+    // 				avatar: true,
+    // 			},
+    // 		},	
+    // 	},
+    // });
+    const posts = await prismaClient_1.default.post.findMany({
+        select: {
+            id: true,
+            content: true,
+            image: true,
+            owner: true,
+            likes: true
         },
     });
-    res.json(new apiResponse_1.default(post, "single Post"));
+    const postsWithLikesCount = posts.map((post) => ({
+        ...post, likes: post.likes.length
+    }));
+    res.json(new apiResponse_1.default(postsWithLikesCount, "single Post"));
 });
 exports.getAllPost = getAllPost;

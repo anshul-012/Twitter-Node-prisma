@@ -113,18 +113,34 @@ const getPostById = asyncHandler(
 
 const getAllPost = asyncHandler(
 	async (req: Request, res: Response, next: NextFunction) => {
-		const post = await db.post.findMany({
-			include: {
-				owner: {
-					select: {
-						username: true,
-						avatar: true,
-					},
-				},
+		// const post = await db.post.findMany({
+		// 	include: {
+		// 		owner: {
+		// 			select: {
+		// 				username: true,
+		// 				avatar: true,
+		// 			},
+		// 		},	
+		// 	},
+		// });
+
+		const posts = await db.post.findMany({
+			select: {
+				id: true,
+				content: true,
+				image: true,
+				owner: true,
+				likes:true
 			},
 		});
 
-		res.json(new ApiResponse(post, "single Post"));
+		const postsWithLikesCount = posts.map((post)=>(
+			{
+				...post,likes:post.likes.length
+			}
+		))
+
+		res.json(new ApiResponse(postsWithLikesCount, "single Post"));
 	}
 );
 
