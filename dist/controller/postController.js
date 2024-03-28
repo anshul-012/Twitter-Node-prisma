@@ -80,9 +80,14 @@ const getPostById = (0, asyncHandler_1.default)(async (req, res, next) => {
                     avatar: true,
                 },
             },
-        },
+        }
     });
-    res.json(new apiResponse_1.default(post, "single Post"));
+    const likes = await prismaClient_1.default.like.findMany({
+        where: {
+            postId: Number(postId)
+        }
+    });
+    res.json(new apiResponse_1.default({ ...post, likes: likes.length }, "single Post"));
 });
 exports.getPostById = getPostById;
 const getAllPost = (0, asyncHandler_1.default)(async (req, res, next) => {

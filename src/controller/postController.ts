@@ -97,10 +97,17 @@ const getPostById = asyncHandler(
 						avatar: true,
 					},
 				},
-			},
+			}
+
 		});
 
-		res.json(new ApiResponse(post, "single Post"));
+		const likes = await db.like.findMany({
+			where:{
+				postId:Number(postId)
+			}
+		})
+
+		res.json(new ApiResponse({...post,likes:likes.length}, "single Post"));
 	}
 );
 
