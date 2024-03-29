@@ -22,6 +22,8 @@ model User {
   posts     Post[]
   likespost Like[]
   comments  Comment[]
+  friends   Friend[]    @relation("UserFriends")
+  followers Friend[]    @relation("UserFollowers")
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
   SavedPost SavedPost[]
@@ -65,4 +67,13 @@ model SavedPost {
   postId Int
 
   @@id([postId, userId])
+}
+
+
+model Friend {
+  id        Int    @id @default(autoincrement())
+  user      User   @relation("UserFriends", fields: [userId], references: [id])
+  userId    String
+  follower  User   @relation("UserFollowers", fields: [followerId], references: [id])
+  followerId String
 }

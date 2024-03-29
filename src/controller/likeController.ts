@@ -13,6 +13,7 @@ const likeToggle = asyncHandler(
             let like = await db.like.findFirst({
             			where: {
             				postId: Number(postId),
+							userId
             			},
             		});
             

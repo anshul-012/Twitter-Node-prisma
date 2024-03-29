@@ -15,6 +15,7 @@ const likeToggle = (0, asyncHandler_1.default)(async (req, res, next) => {
         let like = await prismaClient_1.default.like.findFirst({
             where: {
                 postId: Number(postId),
+                userId
             },
         });
         if (like) {

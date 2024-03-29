@@ -111,27 +111,19 @@ const getPostById = asyncHandler(
 	}
 );
 
+
 const getAllPost = asyncHandler(
 	async (req: Request, res: Response, next: NextFunction) => {
-		// const post = await db.post.findMany({
-		// 	include: {
-		// 		owner: {
-		// 			select: {
-		// 				username: true,
-		// 				avatar: true,
-		// 			},
-		// 		},	
-		// 	},
-		// });
-
 		const posts = await db.post.findMany({
-			select: {
-				id: true,
-				content: true,
-				image: true,
-				owner: true,
+			include: {
+				owner: {
+					select: {
+						username: true,
+						avatar: true,
+					},
+				},
 				likes:true
-			},
+			}	
 		});
 
 		const postsWithLikesCount = posts.map((post)=>(
