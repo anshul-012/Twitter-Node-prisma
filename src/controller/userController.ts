@@ -8,7 +8,7 @@ import { deleteOnCloudinary, uploadOnCloudinary } from "../util/cloudinary";
 const getUserProfile = asyncHandler(
 	async (req: Request, res: Response, next: NextFunction) => {
 		const { username } = req.params;
-
+		
 		const profile = await db.user.findFirst({
 			where: {
 				username,
@@ -34,6 +34,7 @@ const getUserProfile = asyncHandler(
 );
 
 const updateUserAvatar = asyncHandler(
+
 	async (req: Request, res: Response, next: NextFunction) => {
         const id  = req?.user?.id;
         
@@ -42,7 +43,7 @@ const updateUserAvatar = asyncHandler(
         if(!avatarPath){
             return next(new ApiError(400,"Image is requied!"))
         }
-
+		
         const avatar = await uploadOnCloudinary(avatarPath);
 
         // Delete Previous Avatar
@@ -56,19 +57,21 @@ const updateUserAvatar = asyncHandler(
 
         const prevAvatar:any = deletePrevAvatar?.avatar
 
-        await deleteOnCloudinary(prevAvatar?.public_id)
-
+		if(prevAvatar){
+			await deleteOnCloudinary(prevAvatar?.public_id)
+		}
+			
         //-----------------------------------------------------------------
 
         const user = await db.user.update({
 			where: {
-                id
+				id,
 			},
 			data: {
 				avatar:{
-                    url:avatar?.url,
-                    public_id:avatar?.public_id
-                }
+					url:avatar?.url,
+					public_id:avatar?.public_id
+				}
 			},
 		});
 

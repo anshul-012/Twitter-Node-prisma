@@ -4,9 +4,17 @@ import cookieParser from "cookie-parser";
 import errorMiddleware from "./middlewares/errorMiddleware";
 const app = express();
 
+app.use(
+	cors({
+		origin: [
+			"*",
+			"http://localhost:3000",
+		],
+		credentials: true,
+	})
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
 app.use(cookieParser())
 
 // Health route testing

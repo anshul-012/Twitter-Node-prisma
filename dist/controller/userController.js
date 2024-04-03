@@ -34,7 +34,9 @@ const updateUserAvatar = (0, asyncHandler_1.default)(async (req, res, next) => {
     if (!avatarPath) {
         return next(new ApiError_1.default(400, "Image is requied!"));
     }
+    console.log('dfsd');
     const avatar = await (0, cloudinary_1.uploadOnCloudinary)(avatarPath);
+    console.log(avatar, "dfdfs");
     // Delete Previous Avatar
     // ----------------------------------------------------------------
     const deletePrevAvatar = await prismaClient_1.default.user.findFirst({
@@ -43,11 +45,13 @@ const updateUserAvatar = (0, asyncHandler_1.default)(async (req, res, next) => {
         }
     });
     const prevAvatar = deletePrevAvatar?.avatar;
-    await (0, cloudinary_1.deleteOnCloudinary)(prevAvatar?.public_id);
+    if (prevAvatar) {
+        await (0, cloudinary_1.deleteOnCloudinary)(prevAvatar?.public_id);
+    }
     //-----------------------------------------------------------------
     const user = await prismaClient_1.default.user.update({
         where: {
-            id
+            id,
         },
         data: {
             avatar: {
