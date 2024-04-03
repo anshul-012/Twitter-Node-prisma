@@ -24,7 +24,7 @@ const getUserProfile = asyncHandler(
 			new ApiResponse(
 				{
 					...profile,
-					follower: profile?.followers.length,
+					followers: profile?.followers.length,
 					friends: profile?.friends.length,
 				},
 				"Your Profile"
