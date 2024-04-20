@@ -23,7 +23,7 @@ const getUserProfile = (0, asyncHandler_1.default)(async (req, res, next) => {
     });
     res.status(200).json(new apiResponse_1.default({
         ...profile,
-        follower: profile?.followers.length,
+        followers: profile?.followers.length,
         friends: profile?.friends.length,
     }, "Your Profile"));
 });
@@ -34,9 +34,7 @@ const updateUserAvatar = (0, asyncHandler_1.default)(async (req, res, next) => {
     if (!avatarPath) {
         return next(new ApiError_1.default(400, "Image is requied!"));
     }
-    console.log('dfsd');
     const avatar = await (0, cloudinary_1.uploadOnCloudinary)(avatarPath);
-    console.log(avatar, "dfdfs");
     // Delete Previous Avatar
     // ----------------------------------------------------------------
     const deletePrevAvatar = await prismaClient_1.default.user.findFirst({

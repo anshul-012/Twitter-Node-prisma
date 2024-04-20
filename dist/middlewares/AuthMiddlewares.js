@@ -9,6 +9,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const ApiError_1 = __importDefault(require("../util/ApiError"));
 const auth = (0, asyncHandler_1.default)(async (req, res, next) => {
     const { accessToken } = req?.cookies;
+    console.log(accessToken, req);
     if (!accessToken) {
         return next(new ApiError_1.default(401, "unauthorized user !!!"));
     }

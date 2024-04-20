@@ -2,7 +2,14 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import errorMiddleware from "./middlewares/errorMiddleware";
+// import Razorpay from "razorpay";
 const app = express();
+
+// export const instance = new Razorpay({
+// 	key_id: "rzp_test_yllbbYSQNH6DV4",
+// 	key_secret: "b7NRlKNRFLHTOzJPArT3gIF1",
+// });
+
 
 app.use(
 	cors({
@@ -15,9 +22,8 @@ app.use(
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser())
+app.use(cookieParser());
 
-// Health route testing
 app.get("/health", async (_, res) => {
 	res.send("workving fine ⚙️⏳");
 });
@@ -29,14 +35,14 @@ import commentRouter from "./routes/commentRoutes.js";
 import likeRouter from "./routes/likeRouter.js";
 import followRouter from "./routes/friendRoutes.js";
 import userRouter from "./routes/userRouter.js";
-
+// import paymentRouter from "./routes/paymentRoutes.js";
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/posts",postRouter);
 app.use("/api/v1/comments",commentRouter);
 app.use("/api/v1/likes",likeRouter);
 app.use("/api/v1/friends",followRouter);
 app.use("/api/v1/users",userRouter);
-
+// app.use("/api/v1/payments",paymentRouter);
 
 export default app;
 app.use(errorMiddleware); 

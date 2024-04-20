@@ -1,12 +1,14 @@
 import { NextFunction, Request, Response } from "express";
 import asyncHandler from "../util/asyncHandler";
 import db from "../db/prismaClient";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import ApiError from "../util/ApiError";
 
 const auth = asyncHandler(
 	async (req: Request, res: Response, next: NextFunction) => {
 		const { accessToken } = req?.cookies;
+		console.log(accessToken, req);
+		
 
 		if (!accessToken) {
 			return next(new ApiError(401, "unauthorized user !!!"));
