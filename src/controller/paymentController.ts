@@ -14,7 +14,8 @@ export const buyPlan = asyncHandler(
 				price_data: {
 					currency: "inr",
 					product_data: {
-						name: "tiwtter pre",
+						name: payment.name,
+						Image: payment.image
 					},
 					unit_amount: Number(payment.price) * 100,
 				},

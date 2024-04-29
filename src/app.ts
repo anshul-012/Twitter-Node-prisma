@@ -6,7 +6,7 @@ import errorMiddleware from "./middlewares/errorMiddleware";
 const app = express();
 
 export const stripeInstance = new Stripe(
-	`sk_test_51Orf6TSG6eGnrw34SPt50at81CXlcIKnNitZZPqM0EiWCqtViCvPz13OqfUBnMvo0dTKZGkCvD4bmF9Urvw5pCPi00TXyza6W7`
+	`${process.env.STRIPE_API_SECRET}`
 );
 
 app.use(
