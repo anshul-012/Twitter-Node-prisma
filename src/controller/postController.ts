@@ -110,8 +110,6 @@ const getPostById = asyncHandler(
 		res.json(new ApiResponse({...post,likes:likes.length}, "single Post"));
 	}
 );
-
-
 const getAllPost = asyncHandler(
 	async (req: Request, res: Response, next: NextFunction) => {
 		const posts = await db.post.findMany({
@@ -122,10 +120,13 @@ const getAllPost = asyncHandler(
 						avatar: true,
 					},
 				},
-				likes:true
-			}	
+				likes: true,
+			},
+			orderBy: {
+				createdAt: "desc", 
+			},
 		});
-
+	
 		const postsWithLikesCount = posts.map((post)=>(
 			{
 				...post,likes:post.likes.length

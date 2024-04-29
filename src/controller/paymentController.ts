@@ -1,32 +1,57 @@
-// import { NextFunction, Request, Response } from "express";
-// import asyncHandler from "../util/asyncHandler";
+import { NextFunction, Request, Response } from "express";
+import asyncHandler from "../util/asyncHandler";
 // import ApiError from "../util/ApiError";
-// import { instance } from "../app";
+import { stripeInstance } from "../app";
+import ApiError from "../util/ApiError";
+import db from "../db/prismaClient";
+import ApiResponse from "../util/apiResponse";
 
-// export const buyPlan = asyncHandler(
-// 	async (req: Request, res: Response, next: NextFunction) => {
+export const buyPlan = asyncHandler(
+	async (req: Request, res: Response, next: NextFunction) => {
+		const { payment } = req.body;
+		const lineItem = [
+			{
+				price_data: {
+					currency: "inr",
+					product_data: {
+						name: "tiwtter pre",
+					},
+					unit_amount: Number(payment.price) * 100,
+				},
+				quantity: 1,
+			},
+		];
+
+		const session = await stripeInstance.checkout.sessions.create({
+			payment_method_types: ["card"],
+			line_items: lineItem,
+			mode: "payment",
+			success_url: "http://localhost:5173/me",
+			cancel_url: "http://localhost:5173/setting",
+		});
+
+		res.json({ id: session.id });
+	}
+);
+
+export const blueTick = asyncHandler(
+	async (req: Request, res: Response, next: NextFunction) => {
+		const { userId }: { userId: string } = req.body;
+
+		if (userId) {
+			return next(new ApiError(400, "userID is required !"));
+		}
+
+		 await db.user.update({
+			where:{
+				id:userId
+			},
+			data:{
+				blueTick:true
+			}
+		})
+
+		res.status(200).json(new ApiResponse({},"user is verified now"))
 		
-
-// 		const option = {
-// 			amount: 5000,
-// 			currency: "INR",
-// 		};
-
-// 		instance.orders.create(option, function (err, order) {
-// 			if (err) {
-// 				console.log(err);
-// 				return next(
-// 					new ApiError(
-// 						500,
-// 						"something went wrong while payment processing"
-// 					)
-// 				);
-// 			} else {
-// 				console.log("Order created successfully!");
-// 			}
-// 			res.status(200).json(order);
-// 		});
-
-		
-// 	}
-// );
+	}
+);

@@ -99,8 +99,11 @@ const getAllPost = (0, asyncHandler_1.default)(async (req, res, next) => {
                     avatar: true,
                 },
             },
-            likes: true
-        }
+            likes: true,
+        },
+        orderBy: {
+            createdAt: "desc",
+        },
     });
     const postsWithLikesCount = posts.map((post) => ({
         ...post, likes: post.likes.length

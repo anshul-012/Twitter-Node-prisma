@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUserAvatar = exports.getUserProfile = void 0;
+exports.searchUsers = exports.updateUserAvatar = exports.getUserProfile = void 0;
 const asyncHandler_1 = __importDefault(require("../util/asyncHandler"));
 const prismaClient_1 = __importDefault(require("../db/prismaClient"));
 const apiResponse_1 = __importDefault(require("../util/apiResponse"));
@@ -39,8 +39,8 @@ const updateUserAvatar = (0, asyncHandler_1.default)(async (req, res, next) => {
     // ----------------------------------------------------------------
     const deletePrevAvatar = await prismaClient_1.default.user.findFirst({
         where: {
-            id
-        }
+            id,
+        },
     });
     const prevAvatar = deletePrevAvatar?.avatar;
     if (prevAvatar) {
@@ -54,10 +54,26 @@ const updateUserAvatar = (0, asyncHandler_1.default)(async (req, res, next) => {
         data: {
             avatar: {
                 url: avatar?.url,
-                public_id: avatar?.public_id
-            }
+                public_id: avatar?.public_id,
+            },
         },
     });
     res.status(200).json(new apiResponse_1.default(user, "Avatar is update successfully."));
 });
 exports.updateUserAvatar = updateUserAvatar;
+const searchUsers = (0, asyncHandler_1.default)(async (req, res, next) => {
+    const { username } = req.params;
+    if (!username) {
+        return next(new ApiError_1.default(400, "username is required !"));
+    }
+    console.log(username);
+    const users = await prismaClient_1.default.user.findMany({
+        where: {
+            username: {
+                startsWith: username,
+            },
+        },
+    });
+    res.json(new apiResponse_1.default(users, "All user with this keyWord"));
+});
+exports.searchUsers = searchUsers;
