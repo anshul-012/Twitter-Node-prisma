@@ -48,13 +48,14 @@ const updateUserAvatar = asyncHandler(
 		// Delete Previous Avatar
 		// ----------------------------------------------------------------
 
-		const deletePrevAvatar = await db.user.findFirst({
+		// getting user from database and then deleting current avatar of user, then update the new one.
+		const user = await db.user.findFirst({
 			where: {
 				id,
 			},
 		});
 
-		const prevAvatar: any = deletePrevAvatar?.avatar;
+		const prevAvatar: any = user?.avatar;
 
 		if (prevAvatar) {
 			await deleteOnCloudinary(prevAvatar?.public_id);
@@ -62,7 +63,7 @@ const updateUserAvatar = asyncHandler(
 
 		//-----------------------------------------------------------------
 
-		const user = await db.user.update({
+		await db.user.update({
 			where: {
 				id,
 			},
@@ -75,7 +76,7 @@ const updateUserAvatar = asyncHandler(
 		});
 
 		res.status(200).json(
-			new ApiResponse(user, "Avatar is update successfully.")
+			new ApiResponse({}, "Avatar is update successfully.")
 		);
 	}
 );

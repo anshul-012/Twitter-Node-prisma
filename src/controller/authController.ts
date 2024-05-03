@@ -41,7 +41,8 @@ const signUp = asyncHandler(
 			},
 		});
 
-		res.json(new ApiResponse(user, "User Registered Successfully !"));
+		res.status(200).json(new ApiResponse(user, "User Registered Successfully !"));
+
 	}
 );
 
@@ -70,9 +71,9 @@ const signin = asyncHandler(
 			);
 		}
 
-		const isPasswordMatch = checkPassword(user.password!, password);
+		const isPasswordMatched = checkPassword(user.password!, password);
 
-		if (!isPasswordMatch) {
+		if (!isPasswordMatched) {
 			return next(new ApiError(400, "Inviald creadinals"));
 		}
 

@@ -17,5 +17,4 @@ const verifyJWT = async(token:string)=> {
 export {
     generateJwtToken,
     verifyJWT
-
 }
