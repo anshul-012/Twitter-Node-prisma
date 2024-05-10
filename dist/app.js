@@ -12,7 +12,10 @@ const errorMiddleware_1 = __importDefault(require("./middlewares/errorMiddleware
 const app = (0, express_1.default)();
 exports.stripeInstance = new stripe_1.Stripe("sk_test_51PD2CUSH17005eDbS9GgdDN2bBSVTch0z4YH3007pv82mJRGWfrhNxo4laJicmPVCRUT6nFBPPc7bY7uITlKwov300PMuYvTS1");
 app.use((0, cors_1.default)({
-    origin: ["*", "http://localhost:5173"],
+    origin: [
+        "https://main--gilded-pastelito-dd66fd.netlify.app/",
+        "http://localhost:5173",
+    ],
     credentials: true,
 }));
 app.use(express_1.default.json());
