@@ -103,29 +103,5 @@ const searchUsers = asyncHandler(
 	}
 );
 
-const updateUserDetials = asyncHandler(async(req:Request, res:Response,next:NextFunction)=>{
-
-	const {name , email, tagline, bio} = req.body;
-	const userId = req.user.id;
-	
-	const 
-	if(!name || !email || !tagline || !bio ) {
-		return next(new ApiError(400, "All fields are required !"))
-	}
-
-	const user = await db.user.update({
-		where:{
-			id:userId
-		},
-		data:{
-			name,
-			email,
-			bio,
-			taglist : tagline
-		}
-	});
-
-	res.status(200).json(new ApiResponse({},"Your accounts details are updated successfull."))
-})
 
 export { getUserProfile, updateUserAvatar, searchUsers };

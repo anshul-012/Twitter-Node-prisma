@@ -104,37 +104,6 @@ const signOut = asyncHandler(
 		);
 	}
 );
-const resetPassword = asyncHandler(async(req:Request,res:Response, next:NextFunction)=>{
-	const {newPassword , oldPassword} = req.body;
 
-	if(!newPassword || !oldPassword) {
-		return next(new ApiError(400,"Old password & New password both are required !"))
-	}
-
-	const user = db.user.findFirst({
-		where:{
-			id:req.user.id
-		}
-	})
-
-	const isPasswordMatched = await checkPassword(oldPassword,user.password);
-
-	if(!isPasswordMatched) {
-		return next(new ApiError(400, "Incorrect Passowrd !!!"))
-	}
-
-	const encrptedPassword = await incryptPassword(newPassword);
-
-	await db.user.update({
-		where:{
-			id:user.id
-		},
-		data:{
-			password: encrptedPassword
-		}
-	})
-
-	res.status(200).json(new ApiResponse({},"Your password is reset successfully. "));
-})
 
 export { signUp, signin, signOut };
