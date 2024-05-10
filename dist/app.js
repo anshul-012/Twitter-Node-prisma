@@ -10,36 +10,52 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const stripe_1 = require("stripe");
 const errorMiddleware_1 = __importDefault(require("./middlewares/errorMiddleware"));
 const app = (0, express_1.default)();
-exports.stripeInstance = new stripe_1.Stripe(`sk_test_51Orf6TSG6eGnrw34SPt50at81CXlcIKnNitZZPqM0EiWCqtViCvPz13OqfUBnMvo0dTKZGkCvD4bmF9Urvw5pCPi00TXyza6W7`);
+exports.stripeInstance = new stripe_1.Stripe("sk_test_51PD2CUSH17005eDbS9GgdDN2bBSVTch0z4YH3007pv82mJRGWfrhNxo4laJicmPVCRUT6nFBPPc7bY7uITlKwov300PMuYvTS1");
 app.use((0, cors_1.default)({
-    origin: ["*", "http://localhost:3000"],
+    origin: ["*", "http://localhost:5173"],
     credentials: true,
 }));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use((0, cookie_parser_1.default)());
+// app.use();
 app.get("/health", async (_, res) => {
     res.send("workving fine ⚙️⏳");
 });
-app.post("/webhook", async (request, response) => {
+const endpointSecret = "whsec_7670c110f045cf558980f735d0a08396e6f60acbcd00d32d5ec3fe89a3fcab29";
+app.post("/webhook", express_1.default.json({ type: 'application/json' }), (request, response) => {
+    // console.log(request.headers);
     const event = request.body;
-    console.log(event);
-    // Handle the event
-    switch (event.type) {
-        case "payment_intent.succeeded":
-            const paymentIntent = event.data.object;
-            // Then define and call a method to handle the successful payment intent.
-            // handlePaymentIntentSucceeded(paymentIntent);
-            break;
-        case "payment_method.attached":
-            const paymentMethod = event.data.object;
-            // Then define and call a method to handle the successful attachment of a PaymentMethod.
-            // handlePaymentMethodAttached(paymentMethod);
-            break;
-        // ... handle other event types
-        default:
-            console.log(`Unhandled event type ${event.type}`);
-    }
+    console.log("event---------------", event);
+    // try {
+    // 		const sig = request.headers["stripe-signature"];
+    // 		const event = stripeInstance.webhooks.constructEvent(
+    // 			JSON.stringify(request.body),
+    // 			sig!,
+    // 			endpointSecret
+    // 		);
+    // 		console.log("ffdsfsd");
+    // 		console.log("----------------------------------------");
+    // 		console.log(event.type);
+    // 		// Handle the event
+    // 		switch (event.type) {
+    // 			case "payment_intent.succeeded":
+    // 				const paymentIntent = event.data.object;
+    // 				console.log(paymentIntent, "PaymentIntent was successful!");
+    // 				break;
+    // 			case "payment_method.attached":
+    // 				const paymentMethod = event.data.object;
+    // 				console.log("PaymentMethod was attached to a Customer!");
+    // 				console.log(paymentMethod);
+    // 				break;
+    // 			// ... handle other event types
+    // 			default:
+    // 				console.log(`Unhandled event type ${event.type}`);
+    // 		}
+    // } catch (error) {
+    // 	console.log(error);
+    // }
+    // Return a 200 response to acknowledge receipt of the event
     response.json({ received: true });
 });
 const authRoutes_js_1 = __importDefault(require("./routes/authRoutes.js"));
