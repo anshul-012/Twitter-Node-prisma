@@ -14,7 +14,8 @@ app.use(
 		origin: [
 			"https://main--gilded-pastelito-dd66fd.netlify.app",
 			"http://localhost:5173",
-			"http://localhost:3000"
+			"http://localhost:3000",
+			"https://663f161ff60fc1ac7389b4bc--gilded-pastelito-dd66fd.netlify.app/",
 		],
 		credentials: true,
 	})
