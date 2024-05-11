@@ -127,7 +127,7 @@ const getAllPost = asyncHandler(
 			},
 		});
 	
-		const postsWithLikesCount = posts.map((post)=>(
+		const postsWithLikesCount = posts.map((post:any)=>(
 			{
 				...post,likes:post.likes.length
 			}

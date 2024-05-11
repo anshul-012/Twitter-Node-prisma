@@ -11,7 +11,10 @@ export const stripeInstance = new Stripe(
 
 app.use(
 	cors({
-		origin: ["*", "http://localhost:5173"],
+		origin: [
+			"https://main--gilded-pastelito-dd66fd.netlify.app/",
+			"http://localhost:5173",
+		],
 		credentials: true,
 	})
 );
