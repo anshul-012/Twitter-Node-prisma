@@ -3,12 +3,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.searchUsers = exports.updateUserAvatar = exports.getUserProfile = void 0;
+exports.changePassword = exports.searchUsers = exports.updateUserAvatar = exports.getUserProfile = void 0;
 const asyncHandler_1 = __importDefault(require("../util/asyncHandler"));
 const prismaClient_1 = __importDefault(require("../db/prismaClient"));
 const apiResponse_1 = __importDefault(require("../util/apiResponse"));
 const ApiError_1 = __importDefault(require("../util/ApiError"));
 const cloudinary_1 = require("../util/cloudinary");
+const password_1 = require("../lib/password");
 const getUserProfile = (0, asyncHandler_1.default)(async (req, res, next) => {
     const { username } = req.params;
     const profile = await prismaClient_1.default.user.findFirst({
@@ -76,3 +77,28 @@ const searchUsers = (0, asyncHandler_1.default)(async (req, res, next) => {
     res.json(new apiResponse_1.default(users, "All user with this keyWord"));
 });
 exports.searchUsers = searchUsers;
+const changePassword = (0, asyncHandler_1.default)(async (req, res, next) => {
+    const { oldPassword, newPassword } = req.body;
+    if (!oldPassword || !newPassword) {
+        return next(new ApiError_1.default(400, "old and new Passwords both are required !"));
+    }
+    const user = await prismaClient_1.default.user.findFirst({
+        where: {
+            id: req.user.id,
+        },
+    });
+    const isPasswordMatch = (0, password_1.checkPassword)(user?.password, oldPassword);
+    if (!isPasswordMatch) {
+        return next(new ApiError_1.default(401, "Password is Incorrect !"));
+    }
+    await prismaClient_1.default.user.update({
+        where: {
+            id: req.user.id,
+        },
+        data: {
+            password: newPassword,
+        },
+    });
+    res.status(200).json(new apiResponse_1.default(null, "Your password was changed successfully"));
+});
+exports.changePassword = changePassword;

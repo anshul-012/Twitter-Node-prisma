@@ -4,6 +4,7 @@ import db from "../db/prismaClient";
 import ApiResponse from "../util/apiResponse";
 import ApiError from "../util/ApiError";
 import { deleteOnCloudinary, uploadOnCloudinary } from "../util/cloudinary";
+import { checkPassword } from "../lib/password";
 
 const getUserProfile = asyncHandler(
 	async (req: Request, res: Response, next: NextFunction) => {
@@ -91,7 +92,7 @@ const searchUsers = asyncHandler(
 		const users = await db.user.findMany({
 			where: {
 				username: {
-					startsWith:username,
+					startsWith: username,
 				},
 			},
 		});
@@ -100,5 +101,41 @@ const searchUsers = asyncHandler(
 	}
 );
 
+const changePassword = asyncHandler(
+	async (req: Request, res: Response, next: NextFunction) => {
+		const { oldPassword, newPassword } = req.body;
 
-export { getUserProfile, updateUserAvatar, searchUsers };
+		if (!oldPassword || !newPassword) {
+			return next(
+				new ApiError(400, "old and new Passwords both are required !")
+			);
+		}
+
+		const user = await db.user.findFirst({
+			where: {
+				id: req.user.id,
+			},
+		});
+
+		const isPasswordMatch = checkPassword(user?.password!, oldPassword!);
+
+		if (!isPasswordMatch) {
+			return next(new ApiError(401, "Password is Incorrect !"));
+		}
+
+		await db.user.update({
+			where: {
+				id: req.user.id,
+			},
+			data: {
+				password: newPassword,
+			},
+		});
+
+		res.status(200).json(
+			new ApiResponse(null, "Your password was changed successfully")
+		);
+	}
+);
+
+export { getUserProfile, updateUserAvatar, searchUsers, changePassword };

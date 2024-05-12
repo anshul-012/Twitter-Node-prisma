@@ -11,4 +11,5 @@ const router = (0, express_1.Router)();
 router.route("/search/:username").get(userController_1.searchUsers);
 router.route("/:username").get(userController_1.getUserProfile);
 router.route("/avatar").patch(AuthMiddlewares_1.default, multerMiddlewares_1.default.single("avatar"), userController_1.updateUserAvatar);
+router.route("/change-password").post(AuthMiddlewares_1.default, userController_1.changePassword);
 exports.default = router;
