@@ -88,9 +88,6 @@ const searchUsers = asyncHandler(
 			return next(new ApiError(400, "username is required !"));
 		}
 
-		console.log(username);
-		
-
 		const users = await db.user.findMany({
 			where: {
 				username: {

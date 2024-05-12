@@ -12,21 +12,18 @@ const errorMiddleware_1 = __importDefault(require("./middlewares/errorMiddleware
 const app = (0, express_1.default)();
 exports.stripeInstance = new stripe_1.Stripe("sk_test_51PD2CUSH17005eDbS9GgdDN2bBSVTch0z4YH3007pv82mJRGWfrhNxo4laJicmPVCRUT6nFBPPc7bY7uITlKwov300PMuYvTS1");
 app.use((0, cors_1.default)({
-    origin: [
-        "https://main--gilded-pastelito-dd66fd.netlify.app/",
-        "http://localhost:5173",
-    ],
+    origin: ["*", "http://localhost:5173"],
     credentials: true,
 }));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use((0, cookie_parser_1.default)());
 // app.use();
-app.get("/health", async (_, res) => {
+app.get("/", async (_, res) => {
     res.send("workving fine ⚙️⏳");
 });
 const endpointSecret = "whsec_7670c110f045cf558980f735d0a08396e6f60acbcd00d32d5ec3fe89a3fcab29";
-app.post("/webhook", express_1.default.json({ type: 'application/json' }), (request, response) => {
+app.post("/webhook", express_1.default.json({ type: "application/json" }), (request, response) => {
     // console.log(request.headers);
     const event = request.body;
     console.log("event---------------", event);

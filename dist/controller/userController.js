@@ -66,7 +66,6 @@ const searchUsers = (0, asyncHandler_1.default)(async (req, res, next) => {
     if (!username) {
         return next(new ApiError_1.default(400, "username is required !"));
     }
-    console.log(username);
     const users = await prismaClient_1.default.user.findMany({
         where: {
             username: {
