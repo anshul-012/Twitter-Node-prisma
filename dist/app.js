@@ -24,13 +24,13 @@ const commentRoutes_js_1 = __importDefault(require("./routes/commentRoutes.js"))
 const likeRouter_js_1 = __importDefault(require("./routes/likeRouter.js"));
 const friendRoutes_js_1 = __importDefault(require("./routes/friendRoutes.js"));
 const userRouter_js_1 = __importDefault(require("./routes/userRouter.js"));
-const paymentRoutes_js_1 = __importDefault(require("./routes/paymentRoutes.js"));
+// import paymentRouter from "./routes/paymentRoutes.js";
 app.use("/api/v1/auth", authRoutes_js_1.default);
 app.use("/api/v1/posts", postRoutes_js_1.default);
 app.use("/api/v1/comments", commentRoutes_js_1.default);
 app.use("/api/v1/likes", likeRouter_js_1.default);
 app.use("/api/v1/friends", friendRoutes_js_1.default);
 app.use("/api/v1/users", userRouter_js_1.default);
-app.use("/api/v1/payments", paymentRoutes_js_1.default);
+// app.use("/api/v1/payments", paymentRouter);
 exports.default = app;
 app.use(errorMiddleware_1.default);

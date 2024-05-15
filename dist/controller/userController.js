@@ -87,16 +87,18 @@ const changePassword = (0, asyncHandler_1.default)(async (req, res, next) => {
             id: req.user.id,
         },
     });
+    console.log(user);
     const isPasswordMatch = (0, password_1.checkPassword)(user?.password, oldPassword);
     if (!isPasswordMatch) {
         return next(new ApiError_1.default(401, "Password is Incorrect !"));
     }
+    const encrypted = (0, password_1.incryptPassword)(newPassword);
     await prismaClient_1.default.user.update({
         where: {
             id: req.user.id,
         },
         data: {
-            password: newPassword,
+            password: encrypted,
         },
     });
     res.status(200).json(new apiResponse_1.default(null, "Your password was changed successfully"));

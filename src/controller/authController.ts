@@ -6,6 +6,7 @@ import db from "../db/prismaClient";
 import ApiResponse from "../util/apiResponse";
 import { checkPassword, incryptPassword } from "../lib/password";
 import { generateJwtToken } from "../lib/jwt";
+import sendMail from "../lib/sendMail";
 
 const signUp = asyncHandler(
 	async (req: Request, res: Response, next: NextFunction) => {
@@ -88,7 +89,7 @@ const signin = asyncHandler(
 			expires: new Date(Date.now() + 20 * 24 * 60 * 60 * 1000),
 		};
 
-		res.cookie("accessToken", accessToken,cookieOptions).json(
+		res.cookie("accessToken", accessToken, cookieOptions).json(
 			new ApiResponse(
 				{ ...user, accessToken },
 				"User Sign In Successfully."
@@ -105,5 +106,65 @@ const signOut = asyncHandler(
 	}
 );
 
+const forgetPassword = asyncHandler(
+	async (req: Request, res: Response, next: NextFunction) => {
+		const userId = String(req.user.id);
+		const otp = ~~(1000 + Math.random() * 9000);
+		const email = req.user.email;
+		const html = `
+		<h1>Reset Password</h1>
+		<p>Please do not share this OTP with any one</p>
+		<p>${otp}</p>
+		`;
 
-export { signUp, signin, signOut };
+		const mailInfo = await sendMail(email, "Reset Password", html);
+
+		if (mailInfo) {
+			await db.verification.create({
+				data: {
+					userId: userId,
+					otp: otp,
+					expireTime: new Date(Date.now() + 2 * 60 * 1000),
+				},
+			});
+		}
+
+		res.status(200).json(new ApiResponse(null, "check your email"));
+	}
+);
+
+const verifyOtp = asyncHandler(
+	async (req: Request, res: Response, next: NextFunction) => {
+		const { otp } = req.body;
+
+		if (!otp) {
+			return next(new ApiError(400, "OTP is required !"));
+		}
+
+		const verificationOfUser = await db.verification.findFirst({
+			where: {
+				userId: req.user.id,
+				expireTime: { gt: new Date() },
+			},
+		});
+
+		if (verificationOfUser?.otp == otp) {
+			await db.verification.update({
+				where: {
+					userId: req.user.id,
+				},
+				data: {
+					verify: true,
+				},
+			});
+
+			res.status(200).json(
+				new ApiResponse(null, "now you can reset your password")
+			);
+		}
+
+		res.status(200).json(new ApiResponse(null, "Invalid OTP"));
+	}
+);
+
+export { signUp, signin, signOut, forgetPassword , verifyOtp};

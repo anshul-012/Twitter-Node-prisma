@@ -10,4 +10,6 @@ const router = (0, express_1.Router)();
 router.route("/signup").post(authController_1.signUp);
 router.route("/signin").post(authController_1.signin);
 router.route("/signout").post(AuthMiddlewares_1.default, authController_1.signOut);
+router.route("/forget-password").post(AuthMiddlewares_1.default, authController_1.forgetPassword);
+router.route("/verify-otp").post(AuthMiddlewares_1.default, authController_1.verifyOtp);
 exports.default = router;

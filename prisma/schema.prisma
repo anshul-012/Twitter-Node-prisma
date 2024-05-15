@@ -9,80 +9,90 @@ datasource db {
 }
 
 model User {
-  id        String      @id @default(uuid())
-  name      String?
-  username  String      @unique
-  email     String      @unique
-  password  String?     @db.VarChar(255)
-  avatar    Json?
-  tagList   String?     @db.VarChar(70)
-  bio       String?     @db.VarChar(150)
-  private   Boolean     @default(false)
-  blueTick  Boolean     @default(false)
-  posts     Post[]
-  likespost Like[]
-  comments  Comment[]
-  friends   Friend[]    @relation("UserFriends")
-  followers Friend[]    @relation("UserFollowers")
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-  SavedPost SavedPost[]
-  payment   Payments?
-  paymentId Int?        @unique
+  id           String        @id @default(uuid())
+  name         String?
+  username     String        @unique
+  email        String        @unique
+  password     String?       @db.VarChar(255)
+  tagList      String?       @db.VarChar(70)
+  bio          String?       @db.VarChar(150)
+  private      Boolean       @default(false)
+  blueTick     Boolean       @default(false)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  avatar       Json?
+  paymentId    Int?          @unique
+  comments     Comment[]
+  followers    Friend[]      @relation("UserFollowers")
+  friends      Friend[]      @relation("UserFriends")
+  likespost    Like[]
+  payment      Payments?
+  posts        Post[]
+  SavedPost    SavedPost[]
+  Verification Verification?
 }
 
 model Post {
   id        Int         @id @default(autoincrement())
   content   String      @db.VarChar(250)
-  image     Json?
   published Boolean     @default(false)
-  likes     Like[]
-  owner     User        @relation(fields: [ownerId], references: [id])
   ownerId   String
-  Comments  Comment[]
-  savedby   SavedPost[]
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
+  image     Json?
+  Comments  Comment[]
+  likes     Like[]
+  owner     User        @relation(fields: [ownerId], references: [id])
+  savedby   SavedPost[]
 }
 
 model Like {
   id     Int    @id @default(autoincrement())
-  post   Post   @relation(fields: [postId], references: [id])
   postId Int
-  user   User   @relation(fields: [userId], references: [id])
   userId String
+  post   Post   @relation(fields: [postId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
 }
 
 model Comment {
   id      Int    @id @default(autoincrement())
   content String @db.VarChar(100)
-  post    Post   @relation(fields: [postId], references: [id])
   postId  Int
-  user    User   @relation(fields: [userId], references: [id])
   userId  String
+  post    Post   @relation(fields: [postId], references: [id])
+  user    User   @relation(fields: [userId], references: [id])
 }
 
 model SavedPost {
-  user   User   @relation(fields: [userId], references: [id])
   userId String
-  post   Post   @relation(fields: [postId], references: [id])
   postId Int
+  post   Post   @relation(fields: [postId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
 
   @@id([postId, userId])
 }
 
 model Friend {
   id         Int    @id @default(autoincrement())
-  user       User   @relation("UserFriends", fields: [userId], references: [id])
   userId     String
-  follower   User   @relation("UserFollowers", fields: [followerId], references: [id])
   followerId String
+  follower   User   @relation("UserFollowers", fields: [followerId], references: [id])
+  user       User   @relation("UserFriends", fields: [userId], references: [id])
 }
 
 model Payments {
   id            Int      @id
-  user          User     @relation(fields: [userId], references: [id])
   userId        String   @unique
   payment       Boolean
   paymentExpire DateTime
+  user          User     @relation(fields: [userId], references: [id])
+}
+
+model Verification {
+  id         Int      @id @default(autoincrement())
+  userId     String   @unique
+  expireTime DateTime
+  verify     Boolean  @default(false)
+  otp        Int
+  user       User     @relation(fields: [userId], references: [id])
 }

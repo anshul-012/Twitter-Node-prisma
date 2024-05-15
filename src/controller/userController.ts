@@ -4,7 +4,7 @@ import db from "../db/prismaClient";
 import ApiResponse from "../util/apiResponse";
 import ApiError from "../util/ApiError";
 import { deleteOnCloudinary, uploadOnCloudinary } from "../util/cloudinary";
-import { checkPassword } from "../lib/password";
+import { checkPassword, incryptPassword } from "../lib/password";
 
 const getUserProfile = asyncHandler(
 	async (req: Request, res: Response, next: NextFunction) => {
@@ -117,18 +117,23 @@ const changePassword = asyncHandler(
 			},
 		});
 
+		console.log(user);
+		
+
 		const isPasswordMatch = checkPassword(user?.password!, oldPassword!);
 
 		if (!isPasswordMatch) {
 			return next(new ApiError(401, "Password is Incorrect !"));
 		}
 
+		const encrypted = incryptPassword(newPassword);
+
 		await db.user.update({
 			where: {
 				id: req.user.id,
 			},
 			data: {
-				password: newPassword,
+				password: encrypted,
 			},
 		});
 
