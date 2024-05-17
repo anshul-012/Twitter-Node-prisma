@@ -1,9 +1,8 @@
 import nodemailer from "nodemailer";
-import db from "../db/prismaClient";
+import db from "../db/prismaClient.js";
 
 const sendMail = async (email:string,subject:string,html:string) => {
-	console.log(email , subject, html)
-	
+	 
     const transporter = nodemailer.createTransport({
 		host: "sandbox.smtp.mailtrap.io",
 		port: 2525,

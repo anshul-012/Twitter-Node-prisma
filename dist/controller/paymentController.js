@@ -1,4 +1,3 @@
-"use strict";
 // import { NextFunction, Request, Response } from "express";
 // import asyncHandler from "../util/asyncHandler";
 // // import ApiError from "../util/ApiError";
@@ -7,7 +6,7 @@
 // import db from "../db/prismaClient";
 // import ApiResponse from "../util/apiResponse";
 // import { PaymentPayloadBodyType } from "../types/Request";
-Object.defineProperty(exports, "__esModule", { value: true });
+export {};
 // export const buyPlan = asyncHandler(
 // 	async (req: Request, res: Response, next: NextFunction) => {
 // 		const { payment }: { payment: PaymentPayloadBodyType } = req.body;

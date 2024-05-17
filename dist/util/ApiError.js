@@ -1,5 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 class ApiError extends Error {
     statusCode;
     success;
@@ -10,4 +8,4 @@ class ApiError extends Error {
         this.success = false;
     }
 }
-exports.default = ApiError;
+export default ApiError;

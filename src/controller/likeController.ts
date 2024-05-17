@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import asyncHandler from "../util/asyncHandler";
-import db from "../db/prismaClient";
-import ApiResponse from "../util/apiResponse";
-import ApiError from "../util/ApiError";
+import asyncHandler from "../util/asyncHandler.js";
+import db from "../db/prismaClient.js";
+import ApiResponse from "../util/apiResponse.js";
+import ApiError from "../util/ApiError.js";
 
 const likeToggle = asyncHandler(
 	async (req: Request, res: Response, next: NextFunction) => {

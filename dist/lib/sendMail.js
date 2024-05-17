@@ -1,12 +1,6 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const nodemailer_1 = __importDefault(require("nodemailer"));
+import nodemailer from "nodemailer";
 const sendMail = async (email, subject, html) => {
-    console.log(email, subject, html);
-    const transporter = nodemailer_1.default.createTransport({
+    const transporter = nodemailer.createTransport({
         host: "sandbox.smtp.mailtrap.io",
         port: 2525,
         auth: {
@@ -23,4 +17,4 @@ const sendMail = async (email, subject, html) => {
     });
     return mailInfo;
 };
-exports.default = sendMail;
+export default sendMail;

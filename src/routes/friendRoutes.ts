@@ -1,6 +1,6 @@
 import { Router } from "express";
-import auth from "../middlewares/AuthMiddlewares";
-import { followToggle } from "../controller/friendcontroller";
+import auth from "../middlewares/AuthMiddlewares.js";
+import { followToggle } from "../controller/friendcontroller.js";
 
 const router = Router();
 
