@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from "express";
-import asyncHandler from "../util/asyncHandler";
-import db from "../db/prismaClient";
-import ApiResponse from "../util/apiResponse";
-import ApiError from "../util/ApiError";
-import { deleteOnCloudinary, uploadOnCloudinary } from "../util/cloudinary";
+import asyncHandler from "../util/asyncHandler.js";
+import db from "../db/prismaClient.js";
+import ApiResponse from "../util/apiResponse.js";
+import ApiError from "../util/ApiError.js";
+import { deleteOnCloudinary, uploadOnCloudinary } from "../util/cloudinary.js";
+import { checkPassword, incryptPassword } from "../lib/password.js";
 
 const getUserProfile = asyncHandler(
 	async (req: Request, res: Response, next: NextFunction) => {
@@ -88,13 +89,10 @@ const searchUsers = asyncHandler(
 			return next(new ApiError(400, "username is required !"));
 		}
 
-		console.log(username);
-		
-
 		const users = await db.user.findMany({
 			where: {
 				username: {
-					startsWith:username,
+					startsWith: username,
 				},
 			},
 		});
@@ -103,4 +101,46 @@ const searchUsers = asyncHandler(
 	}
 );
 
-export { getUserProfile, updateUserAvatar, searchUsers };
+const changePassword = asyncHandler(
+	async (req: Request, res: Response, next: NextFunction) => {
+		const { oldPassword, newPassword } = req.body;
+
+		if (!oldPassword || !newPassword) {
+			return next(
+				new ApiError(400, "old and new Passwords both are required !")
+			);
+		}
+
+		const user = await db.user.findFirst({
+			where: {
+				id: req.user.id,
+			},
+		});
+
+		console.log(user);
+		
+
+		const isPasswordMatch = checkPassword(user?.password!, oldPassword!);
+
+		if (!isPasswordMatch) {
+			return next(new ApiError(401, "Password is Incorrect !"));
+		}
+
+		const encrypted = incryptPassword(newPassword);
+
+		await db.user.update({
+			where: {
+				id: req.user.id,
+			},
+			data: {
+				password: encrypted,
+			},
+		});
+
+		res.status(200).json(
+			new ApiResponse(null, "Your password was changed successfully")
+		);
+	}
+);
+
+export { getUserProfile, updateUserAvatar, searchUsers, changePassword };

@@ -1,43 +1,37 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.followToggle = void 0;
-const asyncHandler_1 = __importDefault(require("../util/asyncHandler"));
-const prismaClient_1 = __importDefault(require("../db/prismaClient"));
-const apiResponse_1 = __importDefault(require("../util/apiResponse"));
-const ApiError_1 = __importDefault(require("../util/ApiError"));
-const followToggle = (0, asyncHandler_1.default)(async (req, res, next) => {
+import asyncHandler from "../util/asyncHandler.js";
+import db from "../db/prismaClient.js";
+import ApiResponse from "../util/apiResponse.js";
+import ApiError from "../util/ApiError.js";
+const followToggle = asyncHandler(async (req, res, next) => {
     const { userId } = req.params;
     const myId = req?.user?.id;
     try {
-        let friends = await prismaClient_1.default.friend.findFirst({
+        let friends = await db.friend.findFirst({
             where: {
                 userId: myId,
                 followerId: userId
             }
         });
         if (friends) {
-            await prismaClient_1.default.friend.delete({
+            await db.friend.delete({
                 where: {
                     id: friends.id,
                 },
             });
             return res
                 .status(200)
-                .json(new apiResponse_1.default({}, "You Unfollow a User"));
+                .json(new ApiResponse({}, "You Unfollow a User"));
         }
-        await prismaClient_1.default.friend.create({
+        await db.friend.create({
             data: {
                 followerId: userId,
                 userId: myId,
             },
         });
-        res.status(200).json(new apiResponse_1.default({}, "You Follow a user"));
+        res.status(200).json(new ApiResponse({}, "You Follow a user"));
     }
     catch (error) {
-        next(new ApiError_1.default(400, "This is user is not exists "));
+        next(new ApiError(400, "This is user is not exists "));
     }
 });
-exports.followToggle = followToggle;
+export { followToggle };

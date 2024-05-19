@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import asyncHandler from "../util/asyncHandler";
-import db from "../db/prismaClient";
+import asyncHandler from "../util/asyncHandler.js";
+import db from "../db/prismaClient.js";
 import jwt from "jsonwebtoken";
-import ApiError from "../util/ApiError";
+import ApiError from "../util/ApiError.js";
 
 const auth = asyncHandler(
 	async (req: Request, res: Response, next: NextFunction) => {

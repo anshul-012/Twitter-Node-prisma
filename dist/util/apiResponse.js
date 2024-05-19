@@ -1,5 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 class ApiResponse {
     data;
     message;
@@ -10,4 +8,4 @@ class ApiResponse {
         this.success = true;
     }
 }
-exports.default = ApiResponse;
+export default ApiResponse;

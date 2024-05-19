@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import asyncHandler from "../util/asyncHandler";
-import ApiError from "../util/ApiError";
-import db from "../db/prismaClient";
-import ApiResponse from "../util/apiResponse";
+import asyncHandler from "../util/asyncHandler.js";
+import ApiError from "../util/ApiError.js";
+import db from "../db/prismaClient.js"
+import ApiResponse from "../util/apiResponse.js";
 
 const addComment = asyncHandler(
 	async (

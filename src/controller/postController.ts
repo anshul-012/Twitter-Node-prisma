@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import asyncHandler from "../util/asyncHandler";
-import ApiError from "../util/ApiError";
-import { deleteOnCloudinary, uploadOnCloudinary } from "../util/cloudinary";
-import db from "../db/prismaClient";
-import ApiResponse from "../util/apiResponse";
+import asyncHandler from "../util/asyncHandler.js";
+import ApiError from "../util/ApiError.js";
+import { deleteOnCloudinary, uploadOnCloudinary } from "../util/cloudinary.js";
+import db from "../db/prismaClient.js";
+import ApiResponse from "../util/apiResponse.js";
 
 const addPost = asyncHandler(
 	async (req: Request, res: Response, next: NextFunction) => {
@@ -127,7 +127,7 @@ const getAllPost = asyncHandler(
 			},
 		});
 	
-		const postsWithLikesCount = posts.map((post)=>(
+		const postsWithLikesCount = posts.map((post:any)=>(
 			{
 				...post,likes:post.likes.length
 			}
